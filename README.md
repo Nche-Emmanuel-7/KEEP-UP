@@ -46,5 +46,9 @@ Data is stored locally and syncs to the cloud only when the network is available
 
 ## *📌 Group Information*
 *Group 5 – Names of Collaborators*
-- Bebongchu Blaise Ajong  
-- Che Emily Zou  
+- BEBONGCHU BLAISE AJONG  
+- CHE EMILY ZOU
+- NKEMKENG BLESSING NTSAFAC
+- NCHE EMMANUEL
+- QUINSMIDA ABONGWEN
+  
