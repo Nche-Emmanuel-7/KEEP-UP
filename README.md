@@ -1,4 +1,4 @@
-# ![Smart Wallet Logo](https://via.placeholder.com/600x100?text=Smart+Wallet+Logo)
+# ![Logo](https://via.placeholder.com/150)
 
 # *📌Expense Tracker App: SmartWallet*
 Smart Wallet is an easy-to-use expense tracking app that helps users record daily spending, understand their spending habits,
