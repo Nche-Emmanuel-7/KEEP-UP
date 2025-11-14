@@ -1,4 +1,4 @@
-# <img scr="smartwallet%20logo.png"alt="SmartWalletLogo" width="200"/>
+# <img scr="smartwallet%20logo.png"alt="lmartWallet%20logo.png" width="200"/>
 
 # *📌Expense Tracker App: SmartWallet*
 Smart Wallet is an easy-to-use expense tracking app that helps users record daily spending, understand their spending habits,
