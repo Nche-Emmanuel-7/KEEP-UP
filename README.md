@@ -1,6 +1,4 @@
-# ![Logo](smartwallet%20logo.png)
-
-# *📌Expense Tracker App: SmartWallet*
+# *📌Expense Tracker App: Keep-Up*
 Smart Wallet is an easy-to-use expense tracking app that helps users record daily spending, understand their spending habits,
 and manage finances better through a simple and organised interface designed for smooth everyday use.
 
@@ -11,7 +9,7 @@ Students and regular users often overspend unknowingly because they lack a simpl
 organises spending categories properly, and provides quick analysis for understanding financial behaviour comfortably.
 
 ## *📌 Project Goal*
-The main goal of Smart Wallet is to provide a simple platform that allows users to record expenses quickly,
+The main goal of Keep-Up is to provide a simple platform that allows users to record expenses quickly,
 view spending clearly, and understand financial habits without stress, confusion, or unnecessary steps.
 This project aims to support students and everyday users by encouraging responsible financial habits,
 reducing unnecessary spending, and offering easy tools that help plan budgets, make smarter choices, and strengthen long-term financial discipline.
@@ -41,7 +39,7 @@ This workflow helped maintain clean code, track every change clearly, reduce err
 - 💵 Add income tracking to compare earnings with expenses easily.
 
 ## *📌 ⭐ Offline Mode*
-Smart Wallet will work fully offline, allowing users to record expenses, view history, and manage categories without internet.
+Keep-Up will work fully offline, allowing users to record expenses, view history, and manage categories without internet.
 Data is stored locally and syncs to the cloud only when the network is available, ensuring continuous usage and reliability.
 
 ## *📌 Group Information*
