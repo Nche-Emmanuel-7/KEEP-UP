@@ -1,5 +1,5 @@
 # *📌Expense Tracker App: Keep-Up*
-Smart Wallet is an easy-to-use expense tracking app that helps users record daily spending, understand their spending habits,
+Kepp-Up is an easy-to-use expense tracking app that helps users record daily spending, understand their spending habits,
 and manage finances better through a simple and organised interface designed for smooth everyday use.
 
 ## *📌 Problem Statement*
