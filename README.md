@@ -22,7 +22,7 @@ reducing unnecessary spending, and offering easy tools that help plan budgets, m
 - 🌟 Enjoy a friendly interface designed for quick, smooth, and easy use.
 
 ## *📌 Technologies Used*
-- Programming Language: ()  
+- Programming Language: HTML, CSS, Jacascript,Mysql 
 - Development Tools: Git, GitHub, Android Studio or VS Code  
 - Version Control: Git + GitHub branching, commits, and pull requests  
 
