@@ -22,7 +22,7 @@ reducing unnecessary spending, and offering easy tools that help plan budgets, m
 - 🌟 Enjoy a friendly interface designed for quick, smooth, and easy use.
 
 ## *📌 Technologies Used*
-- Programming Language: ()  
+- Programming Language: HTML, CSS, Jacascript,Mysql 
 - Development Tools: Git, GitHub, Android Studio or VS Code  
 - Version Control: Git + GitHub branching, commits, and pull requests  
 
@@ -45,4 +45,7 @@ Data is stored locally and syncs to the cloud only when the network is available
 ## *📌 Group Information*
 *Group 5 – Names of Collaborators*
 - BEBONGCHU BLAISE AJONG  
-- CHE EMILY ZOU  
+- CHE EMILY ZOU
+-Quinsmida Abongnwen
+-Nkemnkeng Blessing Ntsafac
+
