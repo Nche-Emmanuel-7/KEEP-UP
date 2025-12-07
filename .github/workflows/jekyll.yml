@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,12 +19,20 @@ jobs:
 
       - name: Build Jekyll site
         uses: actions/jekyll-build-pages@v1
-        # No extra "with:" needed — it automatically detects /docs when Pages is set to /docs
+        # Automatically builds from /docs if your Pages setting is /docs
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
 
+  deploy:
+    needs: build  # Waits for build job to finish
+    runs-on: ubuntu-latest
+    environment:  # ← THIS LINE + the next one fixes your error
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
