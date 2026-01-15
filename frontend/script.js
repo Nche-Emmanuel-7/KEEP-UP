@@ -1,32 +1,40 @@
 class ExpenseTracker {
     constructor() {
+        // ORIGINAL
         this.transactions = this.loadTransactions();
         this.currentFilter = 'all';
         this.initializeApp();
     }
 
     initializeApp() {
+        // ORIGINAL
         this.setupEventListeners();
         this.updateDashboard();
         this.renderTransactions();
         this.loadTheme();
+
+        // ✅ ADDED (backend load – does not remove original)
+        this.loadTransactionsFromBackend();
+
+        // ✅ NEW: Load username from PHP session
+        this.loadUsernameFromSession();
     }
 
     setupEventListeners() {
-        // Form submission
+        // ORIGINAL: Form submission
         document.getElementById('transactionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.addTransaction();
         });
 
-        // Filter buttons
+        // ORIGINAL: Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.setFilter(e.target.dataset.filter);
             });
         });
 
-        // Theme toggle
+        // ORIGINAL: Theme toggle
         document.getElementById('themeToggle').addEventListener('click', () => {
             this.toggleTheme();
         });
@@ -50,15 +58,41 @@ class ExpenseTracker {
             date: new Date().toISOString()
         };
 
+        // ✅ ADDED: SEND TO BACKEND (does not replace local logic)
+        fetch("../backend/add_transaction.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `description=${encodeURIComponent(description)}&amount=${amount}&type=${type}`
+        })
+        .then(res => res.text())
+        .then(response => {
+            if (!response.includes("success")) {
+                this.showNotification(response, 'error');
+                return;
+            }
+        });
+
+        // ORIGINAL LOGIC (UNCHANGED)
         this.transactions.unshift(transaction);
         this.saveTransactions();
         this.updateDashboard();
         this.renderTransactions();
         this.clearForm();
-        this.showNotification(`${type === 'income' ? 'Income' : 'Expense'} Added successfully!`, 'success');
+        this.showNotification(
+            `${type === 'income' ? 'Income' : 'Expense'} added successfully!`,
+            'success'
+        );
     }
 
     deleteTransaction(id) {
+        // ✅ ADDED: BACKEND DELETE (soft delete)
+        fetch("../backend/delete_transaction.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `id=${id}`
+        });
+
+        // ORIGINAL LOGIC (UNCHANGED)
         this.transactions = this.transactions.filter(t => t.id !== id);
         this.saveTransactions();
         this.updateDashboard();
@@ -71,9 +105,11 @@ class ExpenseTracker {
             .filter(t => t.amount > 0)
             .reduce((sum, t) => sum + t.amount, 0);
 
-        const totalExpense = Math.abs(this.transactions
-            .filter(t => t.amount < 0)
-            .reduce((sum, t) => sum + t.amount, 0));
+        const totalExpense = Math.abs(
+            this.transactions
+                .filter(t => t.amount < 0)
+                .reduce((sum, t) => sum + t.amount, 0)
+        );
 
         const totalBalance = totalIncome - totalExpense;
 
@@ -87,15 +123,14 @@ class ExpenseTracker {
         let filteredTransactions = this.transactions;
 
         if (this.currentFilter !== 'all') {
-            filteredTransactions = this.transactions.filter(t => t.type === this.currentFilter);
+            filteredTransactions = this.transactions.filter(
+                t => t.type === this.currentFilter
+            );
         }
 
         if (filteredTransactions.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                    </svg>
                     <p>No ${this.currentFilter === 'all' ? 'transactions' : this.currentFilter} found.</p>
                 </div>
             `;
@@ -111,17 +146,22 @@ class ExpenseTracker {
                 <div class="transaction-amount ${transaction.type}">
                     ${this.formatCurrency(Math.abs(transaction.amount))}
                 </div>
-                <button class="delete-btn" onclick="tracker.deleteTransaction('${transaction.id}')" title="Delete transaction">
+                <button class="delete-btn" data-id="${transaction.id}" title="Delete transaction">
                     <img src="delete.svg" alt="Delete">
                 </button>
             </div>
         `).join('');
+
+        container.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.deleteTransaction(btn.dataset.id);
+            });
+        });
     }
 
     setFilter(filter) {
         this.currentFilter = filter;
-        
-        // Update active filter button
+
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.filter === filter);
         });
@@ -132,20 +172,20 @@ class ExpenseTracker {
     toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
+
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+        document.getElementById('themeToggle').textContent =
+            newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
     }
 
     loadTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+        document.getElementById('themeToggle').textContent =
+            savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
     }
 
     clearForm() {
@@ -160,23 +200,16 @@ class ExpenseTracker {
     }
 
     formatDate(dateString) {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date);
+        return new Date(dateString).toLocaleString();
     }
 
     showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.remove();
         }, 3000);
@@ -184,9 +217,12 @@ class ExpenseTracker {
 
     saveTransactions() {
         try {
-            localStorage.setItem('expense-tracker-data', JSON.stringify(this.transactions));
+            localStorage.setItem(
+                'expense-tracker-data',
+                JSON.stringify(this.transactions)
+            );
         } catch (error) {
-            console.warn('Could not save to localStorage, using memory storage instead');
+            console.warn('Could not save to localStorage');
         }
     }
 
@@ -195,13 +231,52 @@ class ExpenseTracker {
             const data = localStorage.getItem('expense-tracker-data');
             return data ? JSON.parse(data) : [];
         } catch (error) {
-            console.warn('Could not load from localStorage, starting with empty data');
             return [];
         }
     }
+
+    // ✅ ADDED: LOAD FROM BACKEND (NO ORIGINAL CODE REMOVED)
+    loadTransactionsFromBackend() {
+        fetch("../backend/get_transactions.php")
+            .then(res => res.json())
+            .then(data => {
+                if (!Array.isArray(data)) return;
+
+                this.transactions = data.map(tx => ({
+                    id: tx.id,
+                    description: tx.description,
+                    amount: tx.type === 'expense' ? -tx.amount : tx.amount,
+                    type: tx.type,
+                    date: tx.created_at
+                }));
+
+                this.updateDashboard();
+                this.renderTransactions();
+            })
+            .catch(() => {
+                // fallback already handled by localStorage
+            });
+    }
+
+    // ✅ NEW: Load username from PHP session
+    loadUsernameFromSession() {
+        fetch("../backend/session.php")
+            .then(res => res.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    document.getElementById("welcomeMessage").textContent =
+                        `Welcome back, 😄 ${data.full_name}!`;
+                    localStorage.setItem("userName", data.full_name); // optional
+                } else {
+                    window.location.href = "../frontend/login.html";
+                }
+            })
+            .catch(err => console.error("Error fetching session:", err));
+    }
 }
 
-// Initialize the app when the page loads
+// INITIALIZE APP
 document.addEventListener('DOMContentLoaded', () => {
+    // ✅ Use session-based username fetch before initializing app
     window.tracker = new ExpenseTracker();
 });

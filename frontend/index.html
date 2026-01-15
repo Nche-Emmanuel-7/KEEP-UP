@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keep Up - Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Header centered with logout button */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Logout button styling */
+.btn-logout {
+    background-color: var(--danger, #e74c3c);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #c0392b;
+}
+
+/* Welcome message bottom-left with jumping effect and shadow */
+#welcomeMessage {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: jump 1s ease 0s 3;
+    position: relative;
+}
+
+/* Shadow under the jumping message */
+#welcomeMessage::after {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 5px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    position: absolute;
+    bottom: -5px;
+    left: 25%;
+    animation: shadow 1s ease 0s 3;
+}
+
+/* ✅ ADDED: welcome + dark mode container (NO REMOVAL) */
+.welcome-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* ✅ ADDED: dark mode button */
+.btn-theme {
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-theme:hover {
+    background-color: var(--primary-hover);
+}
+
+@keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-15px); }
+    50% { transform: translateY(-30px); }
+    75% { transform: translateY(-15px); }
+}
+
+@keyframes shadow {
+    0%, 100% { transform: scaleX(1); opacity: 0.2; }
+    50% { transform: scaleX(0.6); opacity: 0.1; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- Header: Keep Up title centered and logout -->
+    <header class="header">
+        <h1>Keep Up</h1>
+
+        <button class="btn-logout" onclick="window.location.href='../backend/logout.php'">
+            Logout
+        </button>
+    </header>
+
+    <!-- ✅ ONLY CHANGE: wrapped welcome message + added dark mode -->
+    <div class="welcome-container">
+        <h2 id="welcomeMessage">Welcome back, 😄 User!</h2>
+        <button id="themeToggle" class="btn-theme">Light Mode</button>
+    </div>
+
+    <!-- Dashboard section -->
+    <div class="dashboard">
+        <div class="stat-card balance">
+            <h3>Total Balance</h3>
+            <div class="amount" id="totalBalance">$0.00</div>
+        </div>
+        <div class="stat-card income">
+            <h3>Total Income</h3>
+            <div class="amount" id="totalIncome">$0.00</div>
+        </div>
+        <div class="stat-card expense">
+            <h3>Total Expenses</h3>
+            <div class="amount" id="totalExpense">$0.00</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="section">
+            <h2>Add Transaction</h2>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" class="form-control" placeholder="Enter description" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" class="form-control" required>
+                        <option value="">Select type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Transaction</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Transaction History</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="income">Income</button>
+                <button class="filter-btn" data-filter="expense">Expenses</button>
+            </div>
+            <div class="transaction-list" id="transactionList">
+                <div class="empty-state">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <p>No transactions yet. Add your first transaction to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    fetch("../backend/get_session.php")
+        .then(res => res.json())
+        .then(data => {
+            if(data.full_name){
+                const welcomeEl = document.getElementById('welcomeMessage');
+                welcomeEl.textContent = `Welcome back, 😄 ${data.full_name}!`;
+                localStorage.setItem("userName", data.full_name);
+            }
+        })
+        .catch(err => {
+            console.error("Error fetching session:", err);
+        });
+});
+</script>
+</body>
+</html>
