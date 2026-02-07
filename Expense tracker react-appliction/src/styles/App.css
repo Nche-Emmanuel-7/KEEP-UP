@@ -1,0 +1,161 @@
+/* App.css */
+
+/* Reset basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General body style */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Auth container for login & signup pages */
+.container {
+  max-width: 450px;
+  width: 100%;
+  margin: 50px auto;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Auth container legacy support */
+.auth-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+}
+
+/* Form styles */
+.container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.container input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.container input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.container button {
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+
+.container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.container button:active {
+  transform: translateY(0);
+}
+
+.container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.container p {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.container a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.container a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* Bounce animation for welcome text */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .container h2 {
+    font-size: 24px;
+  }
+
+  .container input,
+  .container button {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .container h2 {
+    font-size: 20px;
+  }
+
+  .container input,
+  .container button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
